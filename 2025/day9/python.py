@@ -26,12 +26,10 @@ def part2(input):
         parsed_input.append((x_coord, y_coord))
 
     corner_tiles = []
-    boundary_tiles = set()
     # Get red corner tiles
     for line in parsed_input:
         x_coord, y_coord = line
         corner_tiles.append((x_coord, y_coord))
-        boundary_tiles.add((x_coord, y_coord))
 
     # Compute all boundary edges
     # When we start making our rectangles, we'll want to check if they are intersected by these edges
