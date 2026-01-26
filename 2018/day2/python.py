@@ -9,7 +9,7 @@ def part1(input):
             seen_letters[char] = seen_letters.get(char, 0) + 1
 
         # Check for double or triple letters
-        char_counts = seen_letters.values()
+        char_counts = set(seen_letters.values())
         if 3 in char_counts:
             num_triples += 1
         if 2 in char_counts:
@@ -19,11 +19,8 @@ def part1(input):
 
 def part2(input):
     # Do pairwise comparison of strings in input
-    for line1 in input:
-        for line2 in input:
-            if line1 == line2:
-                continue
-
+    for idx, line1 in enumerate(input):
+        for line2 in input[idx+1:]:
             # Go char by char and compare for equality
             # Exit if more than one char is different
             num_differences = 0
@@ -36,7 +33,7 @@ def part2(input):
                     if num_differences > 1:
                         break
 
-            if num_differences <= 1:
+            if num_differences == 1:
                 return "".join(common_letters)
             
 

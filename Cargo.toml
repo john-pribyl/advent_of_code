@@ -1,0 +1,32 @@
+[package]
+name = "AdventOfCode"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "2018day1"
+path = "2018/day1/rust.rs"
+
+[[bin]]
+name = "2018day2"
+path = "2018/day2/rust.rs"
+
+[[bin]]
+name = "2018day3"
+path = "2018/day3/rust.rs"
+
+[[bin]]
+name = "2018day4"
+path = "2018/day4/rust.rs"
+
+[[bin]]
+name = "2018day5"
+path = "2018/day5/rust.rs"
+
+[[bin]]
+name = "2018day6"
+path = "2018/day6/rust.rs"
+
+[dependencies]
+chrono = "0.4.43"
+itertools = "0.14.0"

@@ -26,6 +26,9 @@ fn part1(input: &Vec<&str>) -> usize {
 }
 
 fn part2(input: &Vec<&str>) -> Option<String> {
+    let string_lengths = input
+                .first()
+                .map_or(0, |s| s.len());
     input
         .iter()
         .enumerate()
@@ -45,11 +48,7 @@ fn part2(input: &Vec<&str>) -> Option<String> {
                 .collect::<String>()
         })
         .find(|common| {
-            // Get first pair with only one char different
-            let original_length = input
-                .first()
-                .map_or(0, |s| s.len());
-            common.len() == original_length - 1
+            common.len() == string_lengths - 1
         })
 }
 

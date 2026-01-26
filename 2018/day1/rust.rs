@@ -9,21 +9,6 @@ fn part1(input: &Vec<&str>) -> isize {
 }
 
 fn part2(input: &Vec<&str>) -> isize {
-    let mut current_value = 0;
-    let mut seen_values: HashSet<isize> = HashSet::from([0]);
-
-    loop {
-        for line in input {
-            let line_value = line.parse::<isize>().expect("Value is not numeric");
-            current_value += line_value;
-            if !seen_values.insert(current_value) {
-                return current_value;
-            }
-        }
-    }
-}
-
-fn part2_functional(input: &Vec<&str>) -> isize {
     let mut seen_values: HashSet<isize> = HashSet::from([0]);
     input
         .iter()
@@ -55,10 +40,10 @@ fn main() {
     println!("Part 1: {}", part1_result);
 
     // Part 2 Example
-    let part2_example_result = part2_functional(&example_instructions);
+    let part2_example_result = part2(&example_instructions);
     println!("Part 2 (example): {:?}", part2_example_result);
 
     // Part 2
-    let part2_result = part2_functional(&instructions);
+    let part2_result = part2(&instructions);
     println!("Part 2: {:?}", part2_result);
 }

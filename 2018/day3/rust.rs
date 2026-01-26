@@ -14,7 +14,7 @@ fn part2(input: &Vec<&str>) -> (usize, usize) {
                 .filter_map(|val_string| val_string.parse::<usize>().ok())
                 .collect();
 
-            let (claim_idx, start_col_idx, start_row_idx, section_width, section_height) =
+            let (claim_id, start_col_idx, start_row_idx, section_width, section_height) =
                 (line_parts[0], line_parts[1], line_parts[2], line_parts[3], line_parts[4]);
             
             // Mark squares as occupied
@@ -27,14 +27,14 @@ fn part2(input: &Vec<&str>) -> (usize, usize) {
                 .for_each(|(row_index, column_index)| {
                     claimed_squares
                         .entry((row_index, column_index))
-                        .and_modify(|claim_idxs| {
-                            claim_idxs.push(claim_idx);
+                        .and_modify(|claim_ids| {
+                            claim_ids.push(claim_id);
                             // Invalidate all IDs at this coordinate
-                            claim_idxs.iter().for_each(|id| {
+                            claim_ids.iter().for_each(|id| {
                                 valid_claims.remove(id);
                             });
                         })
-                        .or_insert_with(|| vec![claim_idx]);
+                        .or_insert_with(|| vec![claim_id]);
                 });
         });
 
@@ -42,7 +42,10 @@ fn part2(input: &Vec<&str>) -> (usize, usize) {
         .values()
         .filter(|values| values.len() > 1)
         .count();
-    let part2_result = valid_claims.iter().next().expect("No valid claims remain");
+    let part2_result = valid_claims
+        .iter()
+        .next()
+        .expect("No valid claims remain");
     
     (part1_result, *part2_result)
 }
