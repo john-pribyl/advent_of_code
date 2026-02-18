@@ -1,23 +1,33 @@
 use std::fs;
 use std::collections::HashMap;
-use std::collections::HashSet;
 
 fn part1(input: &Vec<&str>) -> usize {
     let (num_doubles, num_triples) = input
         .iter()
         .map(|line| {
             // Buld charmap, parse values to set, and check for 2 and 3
-            let char_map = line.chars().fold(HashMap::new(), |mut char_map, char| {
-                *char_map.entry(char).or_insert(0) += 1;
+            let char_map = line
+                .chars()
+                .fold(HashMap::new(), |mut char_map, char| {
+                    *char_map.entry(char).or_insert(0) += 1;
+                    char_map
+                });
+
+            // Check if char_map has any values of 2 or 3
+            (
+                // Doubles
                 char_map
-            });
-            let char_count_values = char_map.values().copied().collect::<HashSet<_>>();
-            (char_count_values.contains(&2), char_count_values.contains(&3))
+                    .iter()
+                    .any(|(_key, value)| *value == 2),
+                // Triples
+                char_map
+                    .iter()
+                    .any(|(_key, value)| *value == 3)
+            )
         })
         .fold(
-            // Iterate over the results and count doubles and triples
-            (0, 0),
-            |(doubles_count, triples_count), (has_double, has_triple)| {
+            // Iterate over the results and count total doubles and triples
+            (0, 0),|(doubles_count, triples_count), (has_double, has_triple)| {
                 (doubles_count + has_double as usize, triples_count + has_triple as usize)
             }
         );

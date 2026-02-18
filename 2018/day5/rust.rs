@@ -9,12 +9,15 @@ fn part1(input: &str) -> usize {
                 && char != chars_to_keep[chars_to_keep.len() - 1] 
             {
                 chars_to_keep.pop();
-                return chars_to_keep;
+                chars_to_keep
+            }
+            else {
+                chars_to_keep.push(char);
+
+                chars_to_keep
             }
 
-            chars_to_keep.push(char);
-
-            chars_to_keep
+            
         })
         .len()
 }

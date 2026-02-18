@@ -10,7 +10,6 @@ def part1(input):
 
     # Parse coordinates and determine boundaries
     for idx, line in enumerate(input):
-        # 1, 2
         col_idx, row_idx = line.split(', ')
         row_idx, col_idx = int(row_idx), int(col_idx)
         top_row = min(top_row, row_idx)

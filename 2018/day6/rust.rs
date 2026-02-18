@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fs};
 
 fn part1(input: &Vec<&str>) -> isize {
-     // Parse input node to coordinate tuples
+    // Parse input nodes to coordinate tuples
     let nodes: Vec<(usize, (usize, usize))> = input
         .iter()
         .enumerate()
@@ -34,37 +34,38 @@ fn part1(input: &Vec<&str>) -> isize {
                 (row_idx, col_idx)
             )
         )
+        // Create map of node_idx keys, count of number of tiles that are closest to the node as values
         .fold(HashMap::new(), |mut closest_nodes, (row_idx, col_idx)| {
-            // Compute sum of distance between coordinates and all nodes
+            // Compute distance between these coordinates and all nodes
+            // Keep track of closest node and its distance
             let (closest_node_idx, _) = nodes
                 .iter()
                 .fold((0 as isize, usize::MAX),|(closest_node_idx, min_distance), node| {
                     let distance = row_idx.abs_diff(node.1.0) + col_idx.abs_diff(node.1.1);
                     if distance < min_distance {
+                        // This node is closer than the previous closest
                         (node.0 as isize, distance)
                     } else if distance == min_distance {
+                        // Tie with previous closest node
                         (-1, min_distance)
                     } else {
+                        // This node is not closest
                         (closest_node_idx, min_distance)
                     }
                 });
             
-            closest_nodes
-                .entry((row_idx, col_idx))
-                .and_modify(|value| *value = closest_node_idx)
-                .or_insert(closest_node_idx);
-
-            closest_nodes
-
-        })
-        .into_iter()
-        .fold(HashMap::new(), |mut node_counts, (_coordinates, node_idx)| {
-            if node_idx != -1 {
-                *node_counts.entry(node_idx).or_insert(0) += 1;
+            // Update coordinate map with the closest found node for these coordinates
+            // Ignore the tiles with a tie
+            if closest_node_idx != -1 {
+                *closest_nodes
+                    .entry(closest_node_idx)
+                    .or_insert(0) += 1;
             }
-            node_counts
+
+            closest_nodes
         })
         .into_iter()
+        // Find node with highest count and return its count
         .map(|(_node_idx, count)| count)
         .max()
         .unwrap_or(0)
@@ -102,14 +103,12 @@ fn part2(input: &Vec<&str>, max_total_distance: usize) -> usize {
         )
         .filter(|(row_idx, col_idx)| {
             // Compute sum of distance between coordinates and all nodes
-            let total_distance: usize = nodes
+            nodes
                 .iter()
                 .map(|node| {
                     row_idx.abs_diff(node.0) + col_idx.abs_diff(node.1)
                 })
-                .sum();
-            
-            total_distance < max_total_distance
+                .sum::<usize>() < max_total_distance
         })
         .count()
 
