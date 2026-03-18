@@ -68,7 +68,7 @@ def configure_joltage(machine_schematic):
     # Have PULP solve
     prob.solve(pulp.PULP_CBC_CMD(msg=0))
     result = int(pulp.value(prob.objective))
-    print(f"Found: {target} with {result} presses")
+    # print(f"Found: {target} with {result} presses")
     return result
 
 

@@ -3,27 +3,27 @@ import time
 
 class Particle:
     def __init__(self, position_tuple, velocity_tuple):
-        self.position = position_tuple
+        self.initial_position = position_tuple
         self.velocity = velocity_tuple
 
 # Does part 1 and 2
-def part1(input):
-
+def part1(particle_list):
     iteration = 0
     last_x_variance = math.inf
     while True:
         # Calculate position of each particle in this tick
+        # Keep track of bounding rect for particles as well
         max_x, min_x, max_y, min_y = -math.inf, math.inf, -math.inf, math.inf
         this_round_particles = set()
-        for particle in input:
-            initial_position_x, initial_position_y = particle.position
+        for particle in particle_list:
+            initial_position_x, initial_position_y = particle.initial_position
             velocity_x, velocity_y = particle.velocity
 
             # Calculate particle's current position
             current_position_x = initial_position_x + (velocity_x * iteration)
             current_position_y = initial_position_y + (velocity_y * iteration)
 
-            # Check if boundary needs to expand
+            # Update boundaries of bounding rect
             max_x, min_x = max(max_x, current_position_x), min(min_x, current_position_x)
             max_y, min_y = max(max_y, current_position_y), min(min_y, current_position_y)
 
@@ -33,6 +33,7 @@ def part1(input):
         # Check if particles are getting further apart
         this_x_variance = abs(max_x - min_x)
         if this_x_variance > last_x_variance:
+            print("Particles are diverging. Stopping.")
             break
 
         last_x_variance = this_x_variance
