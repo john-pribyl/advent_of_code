@@ -99,7 +99,7 @@ def main():
     print(f"Part 1: {part1_result}")
 
     # Part 1 (Improved)
-    part1_improved_result = part2(input, 10007, 2019, 1)
+    part1_improved_result = part2(input, 10007, 2019, 100_000)
     print(f"Part 1 (improved): {part1_improved_result}")
 
     # Part 2 done in Rust    

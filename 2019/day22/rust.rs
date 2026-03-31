@@ -50,7 +50,7 @@ fn part1(input: &Vec<&str>, card_count: isize, card_to_locate: isize, num_repiti
 
 fn part2(input: &Vec<&str>, card_count: i128, card_to_locate: i128, num_repetitions: i128) -> i128 {
     // Parse the instructions once
-    // Each operation is a linear congruence, e.g. ax + b mod m
+    // Each operation is a linear congruence, e.g. ax + b mod m. The result is also a linear congruence
     // Can pipe each instruction into the next and accumulate a and b
     // Then when time to "run" the instructions the solution is closed form for one repitition
     let (scalar, translator) = input
@@ -75,54 +75,71 @@ fn part2(input: &Vec<&str>, card_count: i128, card_to_locate: i128, num_repetiti
 
     // To do num_repititions shuffles, It's just composing (ax + b) mod m over and over
     // This becomes a geometrics series
-    let total_forward_scalar = modular_exponentiation(scalar, num_repetitions, card_count);
-    let forward_denominator_inverse = inverse_shuffle(scalar - 1, card_count);
-    let total_forward_translator = (translator * (total_forward_scalar - 1 + card_count) % card_count) % card_count;
-    let total_forward_translator = (total_forward_translator * forward_denominator_inverse) % card_count;
+    let total_scalar = modular_exponentiation(scalar, num_repetitions, card_count);
+    let total_translator = (translator * (total_scalar - 1 + card_count) % card_count) 
+        * inverse_shuffle(scalar - 1, card_count) % card_count;
 
-    // Now that we have the result of running the shuffle many times, we need to invert it.
-    let final_scalar_inverse = inverse_shuffle(total_forward_scalar, card_count);
-    (card_to_locate - total_forward_translator + card_count) * final_scalar_inverse % card_count
+    // Found the total forward scalar and translator, need to invert them
+    ((card_to_locate - total_translator + card_count) % card_count) 
+        * inverse_shuffle(total_scalar, card_count) % card_count
 }
 
 fn inverse_shuffle(target_value: i128, modulus: i128) -> i128 {
-    let mut current_remainder = target_value;
-    let mut next_remainder = modulus;
-    
-    let mut current_coefficient = 1;
-    let mut next_coefficient = 0;
+    // Inner recursive function to maintain the state of the Euclidean Algorithm
+    fn extended_euclidean_recursive(
+        current_remainder: i128,
+        next_remainder: i128,
+        current_coefficient: i128,
+        next_coefficient: i128,
+        modulus: i128,
+    ) -> i128 {
+        if next_remainder == 0 {
+            // Base case: return the coefficient adjusted to be within [0, modulus)
+            return (current_coefficient + modulus) % modulus;
+        }
 
-    // We continue until the remainder becomes 0
-    while next_remainder != 0 {
         let quotient = current_remainder / next_remainder;
 
-        let temporary_remainder = next_remainder;
-        next_remainder = current_remainder % next_remainder;
-        current_remainder = temporary_remainder;
-
-        let temporary_coefficient = next_coefficient;
-        next_coefficient = current_coefficient - (quotient * next_coefficient);
-        current_coefficient = temporary_coefficient;
+        extended_euclidean_recursive(
+            next_remainder,
+            current_remainder % next_remainder,
+            next_coefficient,
+            current_coefficient - (quotient * next_coefficient),
+            modulus,
+        )
     }
 
-    if current_coefficient < 0 {
-        current_coefficient += modulus;
-    }
-
-    current_coefficient
+    extended_euclidean_recursive(target_value, modulus, 1, 0, modulus)
 }
 
-fn modular_exponentiation(mut base: i128, mut exponent: i128, modulus: i128) -> i128 {
-    let mut result = 1;
-    base %= modulus;
-    while exponent > 0 {
-        if exponent % 2 == 1 {
-            result = (result * base) % modulus;
+fn modular_exponentiation(base: i128, exponent: i128, modulus: i128) -> i128 {
+    fn exponentiate_recursive(
+        current_base: i128,
+        remaining_exponent: i128,
+        accumulated_result: i128,
+        modulus: i128,
+    ) -> i128 {
+        if remaining_exponent == 0 {
+            return accumulated_result;
         }
-        base = (base * base) % modulus;
-        exponent /= 2;
+
+        // If the exponent is odd, multiply the current base into our result
+        let next_result = if remaining_exponent % 2 == 1 {
+            (accumulated_result * current_base) % modulus
+        } else {
+            accumulated_result
+        };
+
+        // Square the base and halve the exponent for the next bit
+        exponentiate_recursive(
+            (current_base * current_base) % modulus,
+            remaining_exponent / 2,
+            next_result,
+            modulus,
+        )
     }
-    result
+
+    exponentiate_recursive(base % modulus, exponent, 1, modulus)
 }
 
 fn main() {

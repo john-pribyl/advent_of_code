@@ -32,9 +32,14 @@ name = "2018day7"
 path = "2018/day7/rust.rs"
 
 [[bin]]
+name = "2018day14"
+path = "2018/day14/rust.rs"
+
+[[bin]]
 name = "2019day22"
 path = "2019/day22/rust.rs"
 
 [dependencies]
 chrono = "0.4.43"
+im = "15.1.0"
 itertools = "0.14.0"
