@@ -130,8 +130,8 @@ def part1(initial_state, elf_attack_power = 3):
                         elf_has_died = True
                 
         # After turn, remove dead pieces from board
-        print_board_state(board_state, num_rows, num_cols, turn_idx)
-        time.sleep(1)
+        # print_board_state(board_state, num_rows, num_cols, turn_idx)
+        # time.sleep(1)
         pieces = list(filter(lambda piece: piece.hit_points > 0, pieces))
 
         if not game_over:
@@ -199,17 +199,17 @@ def main():
     part1_example_result, _ = part1(parsed_example_state)
     print(f"Part 1 (example): {part1_example_result}")
 
-    # # Part 1
-    # part1_result, _ = part1(parsed_input_state)
-    # print(f"Part 1: {part1_result}")
+    # Part 1
+    part1_result, _ = part1(parsed_input_state)
+    print(f"Part 1: {part1_result}")
 
-    # # Part 2 Example
-    # part2_example_result = part2(parsed_example_state)
-    # print(f"Part 2 (example): {part2_example_result}")
+    # Part 2 Example
+    part2_example_result = part2(parsed_example_state)
+    print(f"Part 2 (example): {part2_example_result}")
 
-    # # Part 2
-    # part2_result = part2(parsed_input_state)
-    # print(f"Part 2: {part2_result}")
+    # Part 2
+    part2_result = part2(parsed_input_state)
+    print(f"Part 2: {part2_result}")
 
 
 main()

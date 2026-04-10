@@ -74,49 +74,6 @@ fn part2(target_val: usize) -> usize {
     final_recipes.len() - target_length as usize
 }
 
-fn end_matcher(pattern: &[u8], bytes: &[u8]) -> i32 {
-    let blen = bytes.len();
-    let plen = pattern.len();
-    if blen < plen {
-        return -1;
-    }
-    let offset = blen - plen;
-    if &bytes[offset..blen] == pattern {
-        return offset as i32;
-    }
-    return -1;
-}
-
-fn solve2_day14(pattern: Vec<u8>) -> i32 {
-    let mut bytes: Vec<u8> = vec![3, 7];
-    let mut elf0 = 0;
-    let mut elf1 = 1;
-    loop {
-        let score = bytes[elf0] + bytes[elf1];
-
-        let s1 = score % 10;
-        let s10 = score / 10;
-        if s10 > 0 {
-            bytes.push(s10);
-            let offset = end_matcher(&pattern, &bytes);
-            if offset >= 0 {
-                return offset;
-            }
-        }
-        bytes.push(s1);
-        let offset = end_matcher(&pattern, &bytes);
-        if offset >= 0 {
-            return offset;
-        }
-        let blen = bytes.len();
-        if blen >= 500_000_000 {
-            return -1;
-        }
-        elf0 = (elf0 + (bytes[elf0] as usize) + 1) % blen;
-        elf1 = (elf1 + (bytes[elf1] as usize) + 1) % blen;
-    }
-}
-
 fn main() {
     // Part 1 Example
     let part1_example_result = part1(2018);

@@ -36,8 +36,16 @@ name = "2018day14"
 path = "2018/day14/rust.rs"
 
 [[bin]]
+name = "2018day16"
+path = "2018/day16/rust.rs"
+
+[[bin]]
 name = "2019day22"
 path = "2019/day22/rust.rs"
+
+[[bin]]
+name = "2023day1"
+path = "2023/day1/rust.rs"
 
 [dependencies]
 chrono = "0.4.43"
